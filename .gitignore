@@ -1,0 +1,39 @@
+# Exclude large dataset directories
+ExDark/
+.visdrone/
+.reside6k/
+
+# Exclude common Python files and directories
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Exclude potential large output files
+*.pt
+temp_annotations_*.json
+yolo_predictions_*.json
+ground_truth/*.json
+!ground_truth/README.md
+
+# Keep your code and configuration files
+!*.py
+!requirements.txt
+!README.md
+!.gitignore 
