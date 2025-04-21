@@ -2,6 +2,7 @@ import os
 import json
 from collections import defaultdict
 from pathlib import Path
+from PIL import Image
 
 
 def convert_exdark_to_coco(exdark_root, output_json):
@@ -78,9 +79,8 @@ def convert_exdark_to_coco(exdark_root, output_json):
                 continue
 
             # Get image dimensions
-            # For simplicity, we'll use placeholder dimensions
-            # In a real application, use PIL or OpenCV to get actual dimensions
-            width, height = 640, 480  # Placeholder values
+            with Image.open(img_path) as img:
+                width, height = img.size
 
             # Add image to COCO format
             image_id += 1

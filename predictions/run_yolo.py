@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Merged script to run YOLO on ExDark dataset and convert to COCO format.
-Combines functionality from yolo_to_coco.py and run_yolo_to_coco.py.
 """
 import os
 import json
@@ -345,7 +344,7 @@ def run_yolo_on_exdark(exdark_root, model_path, confidence=0.25, gt_coco_path=No
 
     # Save predictions to JSON file
     with open(pred_coco_path, 'w') as f:
-        json.dump(coco_data, f, indent=2)
+        json.dump(coco_data["annotations"], f, indent=2)
 
     print(f"YOLO predictions saved to {pred_coco_path}")
     print(f"Total images: {len(coco_data['images'])}")

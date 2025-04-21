@@ -165,7 +165,16 @@ def evaluate_by_category(gt_json, pred_json, output_file=None):
                 cat_metrics[cat_name] = {
                     "AP": float(cocoEval.stats[0]),
                     "AP50": float(cocoEval.stats[1]),
-                    "AP75": float(cocoEval.stats[2])
+                    "AP75": float(cocoEval.stats[2]),
+                    "AP_small": float(cocoEval.stats[3]),
+                    "AP_medium": float(cocoEval.stats[4]),
+                    "AP_large": float(cocoEval.stats[5]),
+                    "AR_max1": float(cocoEval.stats[6]),
+                    "AR_max10": float(cocoEval.stats[7]),
+                    "AR_max100": float(cocoEval.stats[8]),
+                    "AR_small": float(cocoEval.stats[9]),
+                    "AR_medium": float(cocoEval.stats[10]),
+                    "AR_large": float(cocoEval.stats[11])
                 }
                 print(
                     f"  Results: AP={cat_metrics[cat_name]['AP']:.4f}, AP50={cat_metrics[cat_name]['AP50']:.4f}")
