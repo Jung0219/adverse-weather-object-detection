@@ -51,7 +51,7 @@ python visualize_yolo.py \
   --model_path yolov8n.pt \
   --image_index 0 \
   --confidence 0.25 \
-  --gt_coco_path exdark_coco.json \
+  --gt_coco_path ground_truth/ground_truth.json \
   --output_dir visualized_detections
 ```
 
