@@ -41,6 +41,29 @@ python predictions/run_yolo.py \
 
 This script will save the predictions in a JSON file with COCO format.
 
+### Run DETR on ExDark Dataset
+
+The `run_detr.py` script processes the ExDark dataset with a DETR model (`facebook/detr-resnet-50`) and saves the predictions in COCO format.
+
+```bash
+python predictions/run_detr.py \
+  --exdark_root . \
+  --confidence 0.25 \
+  --gt_coco_path ground_truth/ground_truth.json \
+  --output detr_predictions.json
+```
+
+**Arguments:**
+
+- `--exdark_root`: Path to ExDark dataset root directory (required)
+- `--confidence`: Confidence threshold for detections (default: 0.25)
+- `--gt_coco_path`: Path to ground truth COCO JSON file (optional)
+- `--output`: Custom output filename for DETR predictions (optional)
+
+This script will save the DETR model's predictions in a JSON file with COCO annotation format.  
+It automatically maps DETR's output classes to the ExDark dataset's 12 target classes.
+
+
 ### Visualize YOLO Detections
 
 The `visualize_yolo.py` script creates visualizations of YOLO detections on ExDark images.
