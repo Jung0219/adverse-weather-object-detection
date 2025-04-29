@@ -24,7 +24,7 @@ The `run_yolo.py` script processes the ExDark dataset with a YOLO model and save
 
 ```bash
 python predictions/run_yolo.py \
-  --exdark_root . \
+  --exdark_root ExDark \
   --model_path yolov8n.pt \
   --confidence 0.25 \
   --gt_coco_path ground_truth/ground_truth.json \
@@ -47,7 +47,7 @@ The `run_detr.py` script processes the ExDark dataset with a DETR model (`facebo
 
 ```bash
 python predictions/run_detr.py \
-  --exdark_root . \
+  --exdark_root ExDark \
   --confidence 0.25 \
   --gt_coco_path ground_truth/ground_truth.json \
   --output detr_predictions.json
@@ -100,7 +100,7 @@ The `eval.py` script evaluates YOLO predictions against ground truth annotations
 
 ```bash
 python eval.py \
-  --gt_coco exdark_coco.json \
+  --gt_coco ground_truth/ground_truth.json \
   --pred_coco yolo_predictions.json \
   --by_category \
   --output eval_results_yolov8n
