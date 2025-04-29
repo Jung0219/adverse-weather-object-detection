@@ -27,7 +27,7 @@ python predictions/run_yolo.py \
   --exdark_root . \
   --model_path yolov8n.pt \
   --confidence 0.25 \
-  --gt_coco_path exdark_coco.json \
+  --gt_coco_path ground_truth/ground_truth.json \
   --output yolo_predictions.json
 ```
 
@@ -78,7 +78,7 @@ The `eval.py` script evaluates YOLO predictions against ground truth annotations
 ```bash
 python eval.py \
   --gt_coco exdark_coco.json \
-  --pred_coco yolo_predictions_yolov8n.json \
+  --pred_coco yolo_predictions.json \
   --by_category \
   --output eval_results_yolov8n
 ```
