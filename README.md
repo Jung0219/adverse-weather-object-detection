@@ -7,7 +7,7 @@ This repository contains scripts to run, evaluate, and visualize YOLO object det
 1. Make sure you have the required dependencies installed:
 
    ```
-   pip install ultralytics opencv-python numpy matplotlib tqdm pillow pycocotools
+   pip install torch torchvision torchaudio transformers ultralytics opencv-python numpy matplotlib tqdm pillow pycocotools
    ```
 
 2. Download the ExDark dataset and place it in the `ExDark` directory in the root of this repository.
