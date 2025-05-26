@@ -148,7 +148,7 @@ if __name__ == "__main__":
     parser.add_argument("--exdark_root", type=str,
                         required=True, help="Path to ExDark dataset root")
     parser.add_argument(
-        "--output", type=str, default="exdark_coco.json", help="Output COCO JSON file")
+        "--output", type=str, default="ground_truth.json", help="Output COCO JSON file")
 
     args = parser.parse_args()
     convert_exdark_to_coco(args.exdark_root, args.output)

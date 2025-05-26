@@ -24,6 +24,10 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+weights/
+*.pt
+data/
+.ExDark
 
 # Exclude potential large output files
 *.pt
