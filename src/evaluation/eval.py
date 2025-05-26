@@ -74,7 +74,9 @@ def evaluate_coco(gt_json, pred_json, output_file=None):
     if output_file:
         results_json = output_file
     else:
-        results_json = f"evaluation_results_{Path(pred_json).stem}.json"
+        output_dir = Path("outputs/results")
+        output_dir.mkdir(parents=True, exist_ok=True)
+        results_json = output_dir / f"evaluation_results_{Path(pred_json).stem}.json"
 
     with open(results_json, 'w') as f:
         json.dump(eval_results, f, indent=2)
@@ -186,14 +188,16 @@ def evaluate_by_category(gt_json, pred_json, output_file=None):
             cat_metrics[cat_name] = {"AP": 0.0, "AP50": 0.0, "AP75": 0.0}
 
     # Determine output filename for category results
+    output_dir = Path("outputs/results")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     if output_file:
-        # If a custom overall output is provided, derive the category output name
         base_name = Path(output_file).stem
-        cat_results_json = f"category_evaluation_{base_name}.json"
-        chart_filename = f"category_performance_{base_name}.png"
     else:
-        cat_results_json = f"category_evaluation_{Path(pred_json).stem}.json"
-        chart_filename = f"category_performance_{Path(pred_json).stem}.png"
+        base_name = Path(pred_json).stem
+
+    cat_results_json = output_dir / f"category_evaluation_{base_name}.json"
+    chart_filename = output_dir / f"category_performance_{base_name}.png"
 
     with open(cat_results_json, 'w') as f:
         json.dump(cat_metrics, f, indent=2)

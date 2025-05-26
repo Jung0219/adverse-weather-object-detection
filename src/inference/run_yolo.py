@@ -92,7 +92,7 @@ def run_yolo_on_exdark(exdark_root, model_path, confidence=0.25, gt_coco_path=No
         coco_data["images"] = gt_data["images"]
 
         # Process images from ground truth
-        image_dir = os.path.join(exdark_root, "ExDark")
+        image_dir = os.path.join(exdark_root, "images")
         annotation_id = 0
 
         # Process images
@@ -192,7 +192,7 @@ def run_yolo_on_exdark(exdark_root, model_path, confidence=0.25, gt_coco_path=No
     else:
         print(
             "No ground truth COCO file provided. Scanning all images in ExDark directories.")
-        image_dir = os.path.join(exdark_root, "ExDark")
+        image_dir = os.path.join(exdark_root, "images")
         image_id = 0
         annotation_id = 0
 
@@ -340,7 +340,9 @@ def run_yolo_on_exdark(exdark_root, model_path, confidence=0.25, gt_coco_path=No
     if output_path:
         pred_coco_path = output_path
     else:
-        pred_coco_path = f"yolo_predictions_{Path(model_path).stem}.json"
+        output_dir = Path("data/outputs/predictions")
+        output_dir.mkdir(parents=True, exist_ok=True)
+        pred_coco_path = output_dir / f"predictions_{Path(model_path).stem}.json"
 
     # Save predictions to JSON file
     with open(pred_coco_path, 'w') as f:

@@ -39,8 +39,8 @@ def convert_exdark_to_coco(exdark_root, output_json):
     }
 
     # Get all image directories
-    image_dir = os.path.join(exdark_root, "ExDark")
-    anno_dir = os.path.join(exdark_root, "ExDark_Anno")
+    image_dir = os.path.join(exdark_root, "images")
+    anno_dir = os.path.join(exdark_root, "annotations")
 
     image_id = 0
     annotation_id = 0

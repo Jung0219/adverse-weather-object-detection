@@ -64,7 +64,7 @@ def run_detr_on_exdark(exdark_root, confidence=0.25, gt_coco_path=None, output_p
         coco_data["images"] = gt_data["images"]
         images_info = gt_data["images"]
     else:
-        image_dir = Path(exdark_root) / "ExDark"
+        image_dir = Path(exdark_root) / "images"
         images_info = []
         image_id = 0
         for class_name in class_names:
@@ -100,12 +100,12 @@ def run_detr_on_exdark(exdark_root, confidence=0.25, gt_coco_path=None, output_p
     print("Running DETR on dataset...")
     for img_info in tqdm(images_info):
         # Resolve image path
-        img_path = Path(exdark_root) / "ExDark"
+        img_path = Path(exdark_root) / "images"
         if "path" in img_info:
             img_path = Path(img_info["path"])
         else:
             for class_name in class_names:
-                potential_path = Path(exdark_root) / "ExDark" / \
+                potential_path = Path(exdark_root) / "images" / \
                     class_name / img_info["file_name"]
                 if potential_path.exists():
                     img_path = potential_path
@@ -147,7 +147,14 @@ def run_detr_on_exdark(exdark_root, confidence=0.25, gt_coco_path=None, output_p
             })
 
     # Save predictions to JSON
-    pred_path = output_path or "detr_predictions.json"
+    if output_path:
+        pred_path = output_path
+    else:
+        output_dir = Path("data/outputs/predictions")
+        output_dir.mkdir(parents=True, exist_ok=True)
+        model_name = "detr-resnet-50"
+        pred_path = output_dir / f"predictions_{model_name}.json"
+
     with open(pred_path, "w") as f:
         json.dump(coco_data["annotations"], f, indent=2)
 
