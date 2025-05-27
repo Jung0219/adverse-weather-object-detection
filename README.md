@@ -1,123 +1,107 @@
-# YOLO on ExDark Dataset
+# ExDark Dataset Pipeline
 
-This repository contains scripts to run, evaluate, and visualize YOLO object detection models on the ExDark (Exclusively Dark) dataset.
+This project includes preprocessing, inference, and evaluation tools for object detection models (YOLOv8, YOLOv11, and DETR) on the ExDark dataset.
 
-## Setup
+---
 
-1. Make sure you have the required dependencies installed:
+## Preprocessing
 
-   ```
-   pip install ultralytics opencv-python numpy matplotlib tqdm pillow pycocotools
-   ```
+### 1. Download the ExDark Dataset
 
-2. Download the ExDark dataset and place it in the `ExDark` directory in the root of this repository.
+- **Images**: [Download from Google Drive](https://drive.google.com/file/d/1BHmPgu8EsHoFDDkMGLVoXIlCth2dW6Yx/view)
+- **Annotations**: [Download from Google Drive](https://drive.google.com/file/d/1P3iO3UYn7KoBi5jiUkogJq96N6maZS1i/view)
+- **Class List**: [Download imageclasslist.txt](https://github.com/cs-chan/Exclusively-Dark-Image-Dataset/blob/master/Groundtruth/imageclasslist.txt)
 
-3. Download YOLO models:
-   - YOLOv8n (default): `yolov8n.pt`
-   - YOLOv11n: `yolo11n.pt`
+Organize the files as follows:
 
-## Available Scripts
+```
+data/ExDark/
+├── images/
+├── annotations/
+└── imageclasslist.txt
+```
 
-### Run YOLO on ExDark Dataset
+---
 
-The `run_yolo.py` script processes the ExDark dataset with a YOLO model and saves the predictions in COCO format.
+### 2. Convert Annotations to COCO Format
 
 ```bash
-python predictions/run_yolo.py \
-  --exdark_root . \
-  --model_path yolov8n.pt \
+python src/preprocessing/exdark_to_coco.py   --exdark_root data/ExDark   --output data/ExDark/ground_truth.json
+```
+
+This will generate `ground_truth.json` for COCO-style evaluation/training.
+
+---
+
+## Running Inference
+
+### 1. Download YOLO Models
+
+Place the following models in the `weights/` directory:
+
+- `yolov8n.pt` – [Download from Ultralytics](https://github.com/ultralytics/ultralytics) or use:
+
+```bash
+wget https://github.com/ultralytics/assets/releases/download/v0.0.0/yolov8n.pt -P weights/
+```
+
+- `yolov11.pt` – Place your custom model here.
+
+---
+
+### 2. Run YOLO Inference
+
+```bash
+python src/inference/run_yolo.py \
+  --exdark_root data/ExDark \
+  --model_path weights/yolov8n.pt \
   --confidence 0.25 \
-  --gt_coco_path exdark_coco.json \
-  --output yolo_predictions.json
+  --gt_coco_path data/ExDark/ground_truth.json
 ```
 
-**Arguments:**
+Output:
 
-- `--exdark_root`: Path to ExDark dataset root directory (default: ".")
-- `--model_path`: Path to YOLO model (.pt file) (default: "yolo11n.pt")
-- `--confidence`: Confidence threshold for detections (default: 0.25)
-- `--gt_coco_path`: Path to ground truth COCO JSON file (default: "exdark_coco.json")
-- `--output`: Custom output filename for YOLO predictions (optional)
+```
+data/outputs/predictions/predictions_<modelname>.json
+```
 
-This script will save the predictions in a JSON file with COCO format.
+---
 
-### Visualize YOLO Detections
-
-The `visualize_yolo.py` script creates visualizations of YOLO detections on ExDark images.
+### 3. Run DETR Inference
 
 ```bash
-python visualize_yolo.py \
-  --exdark_root . \
-  --model_path yolov8n.pt \
-  --image_index 0 \
+python src/inference/run_detr.py \
+  --exdark_root data/ExDark \
   --confidence 0.25 \
-  --gt_coco_path exdark_coco.json \
-  --output_dir visualized_detections
+  --gt_coco_path data/ExDark/ground_truth.json
 ```
 
-**Arguments:**
+Output:
 
-- `--exdark_root`: Path to ExDark dataset root directory (default: ".")
-- `--model_path`: Path to YOLO model (.pt file) (default: "yolov8n.pt")
-- `--image_index`: Index of image to use from each class directory (default: 0)
-- `--confidence`: Confidence threshold for detections (default: 0.25)
-- `--gt_coco_path`: Path to ground truth COCO JSON file (default: "exdark_coco.json")
-- `--output_dir`: Directory to save visualized images (default: "visualized_detections")
+```
+data/outputs/predictions/predictions_detr-resnet-50.json
+```
 
-This script will process one image from each of the 12 ExDark classes and save visualization images with:
+---
 
-- Blue boxes: YOLO detections
-- Green boxes: Ground truth (if provided)
+## Evaluation
 
-The script will save images to the specified output directory (creates if it doesn't exist). If the directory already exists, new images will be added (potentially overwriting existing files with the same names).
-
-### Evaluate YOLO Predictions
-
-The `eval.py` script evaluates YOLO predictions against ground truth annotations.
+Evaluate predictions against ground truth:
 
 ```bash
-python eval.py \
-  --gt_coco exdark_coco.json \
-  --pred_coco yolo_predictions_yolov8n.json \
-  --by_category \
-  --output eval_results_yolov8n
+python src/evaluation/eval.py \
+  --gt_coco data/ExDark/ground_truth.json \
+  --pred_coco data/outputs/predictions/yolov8n_predictions.json \
+  --by_category
 ```
 
-**Arguments:**
+Evaluation results are saved in:
 
-- `--gt_coco`: Path to ground truth COCO JSON file (required)
-- `--pred_coco`: Path to predictions COCO JSON file (required)
-- `--by_category`: Include to evaluate performance by category
-- `--output`: Custom output filename for evaluation results (optional)
+```
+data/outputs/results/
+├── evaluation_results_yolov8n_predictions.json
+├── category_evaluation_yolov8n_predictions.json
+└── category_performance_yolov8n_predictions.png
+```
 
-This script will:
-
-1. Calculate overall COCO metrics (AP, AP50, AP75, etc.)
-2. Generate per-category metrics if `--by_category` is specified
-3. Create a bar chart comparing performance across categories
-4. Save results to JSON files
-
-## Example Workflow
-
-1. Generate COCO format predictions using YOLOv8n:
-
-   ```
-   python predictions/run_yolo.py --model_path yolov8n.pt
-   ```
-
-2. Visualize detections on sample images:
-
-   ```
-   python visualize_yolo.py --model_path yolov8n.pt --image_index 5
-   ```
-
-3. Evaluate the predictions:
-   ```
-   python eval.py --gt_coco exdark_coco.json --pred_coco yolov8n_predictions.json --by_category
-   ```
-
-## Notes
-
-- The scripts map YOLO class names to ExDark classes automatically
-- YOLO detections for classes not in the ExDark dataset (12 classes) are filtered out
-- Visualization images include both model predictions and ground truth boxes in different colors
+> Note: `eval.py` currently saves multiple intermediate files. Consider modifying it to reduce clutter or support silent mode.
