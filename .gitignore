@@ -24,10 +24,13 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-weights/
-*.pt
-data/
-.ExDark
+# Ignore everything inside data/ and weights/
+data/**
+weights/**
+
+# But keep all .gitkeep files
+!data/**/.gitkeep
+!weights/**/.gitkeep
 
 # Exclude potential large output files
 *.pt
